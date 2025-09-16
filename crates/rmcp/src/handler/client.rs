@@ -56,6 +56,9 @@ impl<H: ClientHandler> Service<RoleClient> for H {
             ServerNotification::PromptListChangedNotification(_notification_no_param) => {
                 self.on_prompt_list_changed(context).await
             }
+            ServerNotification::CustomNotification(notification) => {
+                self.on_custom_notification(notification.method, notification.params, context).await
+            }
         };
         Ok(())
     }
@@ -162,6 +165,14 @@ pub trait ClientHandler: Sized + Send + Sync + 'static {
     }
     fn on_prompt_list_changed(
         &self,
+        context: NotificationContext<RoleClient>,
+    ) -> impl Future<Output = ()> + Send + '_ {
+        std::future::ready(())
+    }
+    fn on_custom_notification(
+        &self,
+        method: String,
+        params: serde_json::Value,
         context: NotificationContext<RoleClient>,
     ) -> impl Future<Output = ()> + Send + '_ {
         std::future::ready(())

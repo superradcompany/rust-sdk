@@ -1692,6 +1692,13 @@ pub struct GetPromptResult {
 }
 
 // =============================================================================
+// CUSTOM NOTIFICATIONS
+// =============================================================================
+
+/// Custom notification for protocol extensions beyond standard MCP
+pub type CustomNotification = Notification<String, serde_json::Value>;
+
+// =============================================================================
 // MESSAGE TYPE UNIONS
 // =============================================================================
 
@@ -1817,7 +1824,8 @@ ts_union!(
     | ResourceUpdatedNotification
     | ResourceListChangedNotification
     | ToolListChangedNotification
-    | PromptListChangedNotification;
+    | PromptListChangedNotification
+    | CustomNotification;
 );
 
 ts_union!(

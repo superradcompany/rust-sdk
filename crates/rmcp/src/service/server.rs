@@ -413,6 +413,21 @@ impl Peer<RoleServer> {
     method!(peer_not notify_resource_list_changed ResourceListChangedNotification);
     method!(peer_not notify_tool_list_changed ToolListChangedNotification);
     method!(peer_not notify_prompt_list_changed PromptListChangedNotification);
+
+    pub async fn send_custom_notification(
+        &self,
+        method: String,
+        params: serde_json::Value,
+    ) -> Result<(), ServiceError> {
+        self.send_notification(ServerNotification::CustomNotification(
+            crate::model::Notification {
+                method,
+                params,
+                extensions: Default::default(),
+            }
+        ))
+        .await
+    }
 }
 
 // =============================================================================

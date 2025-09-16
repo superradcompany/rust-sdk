@@ -359,6 +359,21 @@ impl Peer<RoleClient> {
     method!(peer_not notify_progress ProgressNotification(ProgressNotificationParam));
     method!(peer_not notify_initialized InitializedNotification);
     method!(peer_not notify_roots_list_changed RootsListChangedNotification);
+
+    pub async fn send_custom_notification(
+        &self,
+        method: String,
+        params: serde_json::Value,
+    ) -> Result<(), ServiceError> {
+        self.send_notification(ClientNotification::CustomNotification(
+            crate::model::Notification {
+                method,
+                params,
+                extensions: Default::default(),
+            }
+        ))
+        .await
+    }
 }
 
 impl Peer<RoleClient> {

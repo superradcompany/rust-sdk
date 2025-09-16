@@ -46,6 +46,10 @@ name = "clients_collection"
 path = "src/collection.rs"
 
 [[example]]
+name = "clients_custom_notification"
+path = "src/custom_notification.rs"
+
+[[example]]
 name = "clients_oauth_client"
 path = "src/auth/oauth_client.rs"
 

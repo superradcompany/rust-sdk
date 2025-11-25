@@ -782,7 +782,6 @@ where
                     notification,
                     ..
                 })) => {
-                    tracing::info!(?notification, "received notification");
                     // catch cancelled notification
                     let mut notification = match notification.try_into() {
                         Ok::<CancelledNotification, _>(cancelled) => {
@@ -806,13 +805,13 @@ where
                             meta,
                             extensions,
                         };
-                        let current_span = tracing::Span::current();
-                        tokio::spawn(async move {
-                            let result = service.handle_notification(notification, context).await;
-                            if let Err(error) = result {
-                                tracing::warn!(%error, "Error sending notification");
-                            }
-                        }.instrument(current_span));
+                        // Process notification synchronously to preserve ordering.
+                        // Spawning as separate tasks causes race conditions where
+                        // notifications can complete out of order.
+                        let result = service.handle_notification(notification, context).await;
+                        if let Err(error) = result {
+                            tracing::warn!(%error, "Error sending notification");
+                        }
                     }
                 }
                 Event::PeerMessage(JsonRpcMessage::Response(JsonRpcResponse {

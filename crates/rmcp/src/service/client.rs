@@ -362,15 +362,11 @@ impl Peer<RoleClient> {
 
     pub async fn send_custom_notification(
         &self,
-        method: String,
-        params: serde_json::Value,
+        method: impl Into<String>,
+        params: Option<serde_json::Value>,
     ) -> Result<(), ServiceError> {
-        self.send_notification(ClientNotification::CustomNotification(
-            crate::model::Notification {
-                method,
-                params,
-                extensions: Default::default(),
-            }
+        self.send_notification(ClientNotification::CustomClientNotification(
+            crate::model::CustomClientNotification::new(method, params),
         ))
         .await
     }

@@ -977,6 +977,9 @@
         },
         {
           "$ref": "#/definitions/NotificationNoParam3"
+        },
+        {
+          "$ref": "#/definitions/Notification5"
         }
       ],
       "required": [
@@ -1303,6 +1306,19 @@
         "params": {
           "$ref": "#/definitions/ResourceUpdatedNotificationParam"
         }
+      },
+      "required": [
+        "method",
+        "params"
+      ]
+    },
+    "Notification5": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "params": true
       },
       "required": [
         "method",

@@ -7,6 +7,9 @@ use tokio::{
     process::{ChildStderr, ChildStdin, ChildStdout},
 };
 
+#[cfg(target_os = "linux")]
+use std::os::unix::process::CommandExt;
+
 use super::{RxJsonRpcMessage, Transport, TxJsonRpcMessage, async_rw::AsyncRwTransport};
 use crate::RoleClient;
 
@@ -191,6 +194,18 @@ impl TokioChildProcessBuilder {
             .stdin(self.stdin)
             .stdout(self.stdout)
             .stderr(self.stderr);
+
+        // On Linux, request that the kernel sends SIGTERM to the child when the parent dies.
+        // This ensures MCP servers are cleaned up even if the agent is killed with SIGKILL.
+        #[cfg(target_os = "linux")]
+        unsafe {
+            self.cmd.command_mut().pre_exec(|| {
+                if libc::prctl(libc::PR_SET_PDEATHSIG, libc::SIGTERM) == -1 {
+                    return Err(std::io::Error::last_os_error());
+                }
+                Ok(())
+            });
+        }
 
         let (child, stdout, stdin, stderr_opt) = child_process(self.cmd.spawn()?)?;
 

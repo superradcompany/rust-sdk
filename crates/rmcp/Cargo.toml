@@ -50,6 +50,10 @@ tower-service = { version = "0.3", optional = true }
 # for child process transport
 process-wrap = { version = "8.2", features = ["tokio1"], optional = true }
 
+# for PR_SET_PDEATHSIG on Linux (child process cleanup when parent dies)
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+
 # for ws transport
 # tokio-tungstenite ={ version = "0.26", optional = true }
 

@@ -50,10 +50,6 @@ tower-service = { version = "0.3", optional = true }
 # for child process transport
 process-wrap = { version = "8.2", features = ["tokio1"], optional = true }
 
-# for PR_SET_PDEATHSIG on Linux (child process cleanup when parent dies)
-[target.'cfg(target_os = "linux")'.dependencies]
-libc = "0.2"
-
 # for ws transport
 # tokio-tungstenite ={ version = "0.26", optional = true }
 
@@ -65,8 +61,14 @@ uuid = { version = "1", features = ["v4"], optional = true }
 http-body = { version = "1", optional = true }
 http-body-util = { version = "0.1", optional = true }
 bytes = { version = "1", optional = true }
+
 # macro
 rmcp-macros = { workspace = true, optional = true }
+
+# for PR_SET_PDEATHSIG on Linux (child process cleanup when parent dies)
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+
 [target.'cfg(not(all(target_family = "wasm", target_os = "unknown")))'.dependencies]
 chrono = { version = "0.4.38", features = ["serde"] }
 

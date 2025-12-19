@@ -320,6 +320,15 @@ impl AuthorizationManager {
         Ok(())
     }
 
+    /// Set custom authorization metadata.
+    ///
+    /// Use this for OAuth servers that don't support standard metadata discovery
+    /// (e.g., servers without `/.well-known/oauth-authorization-server` endpoint).
+    /// This must be called before `configure_client()` or `configure_client_id()`.
+    pub fn set_metadata(&mut self, metadata: AuthorizationMetadata) {
+        self.metadata = Some(metadata);
+    }
+
     /// discover oauth2 metadata
     pub async fn discover_metadata(&self) -> Result<AuthorizationMetadata, AuthError> {
         if let Some(metadata) = self.try_discover_oauth_server(&self.base_url).await? {

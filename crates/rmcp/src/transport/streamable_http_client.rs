@@ -732,9 +732,9 @@ impl StreamableHttpClientTransportConfig {
     ///
     /// # Arguments
     ///
-    /// * `value` - A bearer token without the `Bearer ` prefix
+    /// * `value` - The full Authorization header value including the scheme
+    ///   (e.g., "Bearer token123", "Basic dXNlcjpwYXNz", "ApiKey xyz")
     pub fn auth_header<T: Into<String>>(mut self, value: T) -> Self {
-        // set our authorization header
         self.auth_header = Some(value.into());
         self
     }

@@ -39,7 +39,7 @@ impl StreamableHttpClient for reqwest::Client {
             request_builder = request_builder.header(HEADER_LAST_EVENT_ID, last_event_id);
         }
         if let Some(auth_header) = auth_token {
-            request_builder = request_builder.bearer_auth(auth_header);
+            request_builder = request_builder.header(reqwest::header::AUTHORIZATION, auth_header);
         }
         let response = request_builder.send().await?;
         if response.status() == reqwest::StatusCode::METHOD_NOT_ALLOWED {
@@ -72,7 +72,7 @@ impl StreamableHttpClient for reqwest::Client {
     ) -> Result<(), StreamableHttpError<Self::Error>> {
         let mut request_builder = self.delete(uri.as_ref());
         if let Some(auth_header) = auth_token {
-            request_builder = request_builder.bearer_auth(auth_header);
+            request_builder = request_builder.header(reqwest::header::AUTHORIZATION, auth_header);
         }
         let response = request_builder
             .header(HEADER_SESSION_ID, session.as_ref())
@@ -99,7 +99,7 @@ impl StreamableHttpClient for reqwest::Client {
             .post(uri.as_ref())
             .header(ACCEPT, [EVENT_STREAM_MIME_TYPE, JSON_MIME_TYPE].join(", "));
         if let Some(auth_header) = auth_token {
-            request = request.bearer_auth(auth_header);
+            request = request.header(reqwest::header::AUTHORIZATION, auth_header);
         }
         if let Some(session_id) = session_id {
             request = request.header(HEADER_SESSION_ID, session_id.as_ref());

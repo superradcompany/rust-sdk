@@ -16,7 +16,8 @@ where
     ) -> Result<(), crate::transport::streamable_http_client::StreamableHttpError<Self::Error>>
     {
         if auth_token.is_none() {
-            auth_token = Some(self.get_access_token().await?);
+            // OAuth tokens need "Bearer " prefix for the Authorization header
+            auth_token = Some(format!("Bearer {}", self.get_access_token().await?));
         }
         self.http_client
             .delete_session(uri, session_id, auth_token)
@@ -34,7 +35,8 @@ where
         crate::transport::streamable_http_client::StreamableHttpError<Self::Error>,
     > {
         if auth_token.is_none() {
-            auth_token = Some(self.get_access_token().await?);
+            // OAuth tokens need "Bearer " prefix for the Authorization header
+            auth_token = Some(format!("Bearer {}", self.get_access_token().await?));
         }
         self.http_client
             .get_stream(uri, session_id, last_event_id, auth_token)
@@ -52,7 +54,8 @@ where
         StreamableHttpError<Self::Error>,
     > {
         if auth_token.is_none() {
-            auth_token = Some(self.get_access_token().await?);
+            // OAuth tokens need "Bearer " prefix for the Authorization header
+            auth_token = Some(format!("Bearer {}", self.get_access_token().await?));
         }
         self.http_client
             .post_message(uri, message, session_id, auth_token)
